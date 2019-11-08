@@ -75,10 +75,10 @@ namespace ToolBox.Localization
 			if (isUploaded == false)
 				LoadText();
 
-			if (!localization[language].ContainsKey(key))
+			if (localization[language].TryGetValue(key, out string value))
+				return value;
+			else
 				throw new KeyNotFoundException("Translation not found: " + key);
-
-			return localization[language][key];
 		}
 
 		private static string Localize(string key, params object[] args)
