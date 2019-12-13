@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace ToolBox.Localization
 {
 	public static class Localization
 	{
+		[FilePath] private static string path = "";
+
 		private static Dictionary<string, Dictionary<string, string>> localization = new Dictionary<string, Dictionary<string, string>>();
 		private static string language = "English";
 		private static bool isUploaded = false;
@@ -19,7 +21,7 @@ namespace ToolBox.Localization
 				return lines;
 			}
 
-			string filePath = Path.Combine(Application.streamingAssetsPath, "Localization.csv");
+			string filePath = Path.Combine(path);
 
 			using (StreamReader reader = new StreamReader(filePath))
 			{
