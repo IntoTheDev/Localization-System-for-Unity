@@ -4,20 +4,15 @@ using UnityEngine;
 
 namespace ToolBox.Localization
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(TMP_Text))]
 	public class LocalizationTMP : MonoBehaviour
 	{
-		[SerializeField, FoldoutGroup("Components")] private TMP_Text textComponent = null;
-		[SerializeField, FoldoutGroup("Data")] private string localizationKey = "";
-#if UNITY_EDITOR
-		[SerializeField, ReadOnly, FoldoutGroup("Debug")] private string debugText = "";
-#endif
+		[SerializeField, Required, ChildGameObjectsOnly] private TMP_Text textComponent = null;
+		[SerializeField] private LocalizedString text = default;
 
-		private void Start() => textComponent.text = Localization.LocalizeText(localizationKey);
+		private void OnEnable() =>
+			textComponent.text = text.Value;
 
-#if UNITY_EDITOR
-		[Button("Localize"), FoldoutGroup("Debug")]
-		private void Localize() => debugText = Localization.LocalizeText(localizationKey);
-#endif
+		public void Translate() =>
+			textComponent.text = text.Value;
 	}
 }
