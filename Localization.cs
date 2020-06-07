@@ -113,7 +113,7 @@ namespace ToolBox.Localization
 				return lines;
 			}
 
-			string filePath = Path.Combine(fileName);
+			string filePath = Path.Combine(Application.streamingAssetsPath, fileName);
 
 			using (StreamReader reader = new StreamReader(filePath))
 			{

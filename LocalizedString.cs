@@ -11,7 +11,7 @@ namespace ToolBox.Localization
 		[SerializeField, ReadOnly] private string currentLocalizationKey = "";
 		[SerializeField, ReadOnly] private bool isInitialized = false;
 
-		private string language;
+		private string language = "";
 
 		public string Value
 		{
@@ -24,6 +24,7 @@ namespace ToolBox.Localization
 					language = newLanguage;
 					value = Localization.LocalizeText(localizationKey);
 					isInitialized = true;
+
 					return value;
 				}
 
@@ -31,6 +32,7 @@ namespace ToolBox.Localization
 				{
 					value = Localization.LocalizeText(localizationKey);
 					language = newLanguage;
+
 					return value;
 				}
 
