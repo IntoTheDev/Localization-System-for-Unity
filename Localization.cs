@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 namespace ToolBox.Localization
@@ -13,7 +12,6 @@ namespace ToolBox.Localization
 
 		[NonSerialized] private static Dictionary<string, Dictionary<string, string>> localization = new Dictionary<string, Dictionary<string, string>>();
 		[NonSerialized] public static string Language = "RUS";
-		[NonSerialized] private static bool isUploaded = false;
 
 		[NonSerialized] private static bool isEditorReady = false;
 		[NonSerialized] private static string[] keys = null;
@@ -21,6 +19,7 @@ namespace ToolBox.Localization
 
 		public const string SAVE_KEY = "Language";
 
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
 		private static void LoadText()
 		{
 			Language = PlayerPrefs.GetString(SAVE_KEY, "RUS");
@@ -77,8 +76,6 @@ namespace ToolBox.Localization
 
 				reader.Close();
 				reader.Dispose();
-
-				isUploaded = true;
 			}
 		}
 
@@ -87,6 +84,21 @@ namespace ToolBox.Localization
 
 		public static string LocalizeText(string key, params object[] args) =>
 			Localize(key, args);
+
+		private static string Localize(string key)
+		{
+			if (localization[Language].TryGetValue(key, out string value))
+				return value;
+			else
+				throw new KeyNotFoundException("Translation not found: " + key);
+		}
+
+		private static string Localize(string key, params object[] args)
+		{
+			string localizedText = Localize(key);
+
+			return string.Format(localizedText, args);
+		}
 
 #if UNITY_EDITOR
 		public static string[] GetEditorData()
@@ -143,24 +155,6 @@ namespace ToolBox.Localization
 		private static void Reload() =>
 			isEditorReady = false;
 #endif
-
-		private static string Localize(string key)
-		{
-			if (isUploaded == false)
-				LoadText();
-
-			if (localization[Language].TryGetValue(key, out string value))
-				return value;
-			else
-				throw new KeyNotFoundException("Translation not found: " + key);
-		}
-
-		private static string Localize(string key, params object[] args)
-		{
-			string localizedText = Localize(key);
-
-			return string.Format(localizedText, args);
-		}
 	}
 }
 
