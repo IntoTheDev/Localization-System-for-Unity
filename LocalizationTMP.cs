@@ -6,13 +6,13 @@ namespace ToolBox.Localization
 {
 	public class LocalizationTMP : MonoBehaviour
 	{
-		[SerializeField, Required, ChildGameObjectsOnly] private TMP_Text textComponent = null;
-		[SerializeField] private LocalizedString text = default;
+		[SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _textComponent = null;
+		[SerializeField] private LocalizedString _text = default;
 
 		private void OnEnable() =>
-			textComponent.text = text.Value;
+			_textComponent.text = _text.Value;
 
 		public void Translate() =>
-			textComponent.text = text.Value;
+			_textComponent.text = _text.Value;
 	}
 }

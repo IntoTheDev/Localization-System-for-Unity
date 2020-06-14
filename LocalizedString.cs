@@ -6,12 +6,12 @@ namespace ToolBox.Localization
 	[System.Serializable]
 	public class LocalizedString
 	{
-		[SerializeField, ValueDropdown("GetKeys")] private string localizationKey = "";
-		[SerializeField, ReadOnly] private string value = "";
-		[SerializeField, ReadOnly] private string currentLocalizationKey = "";
-		[SerializeField, ReadOnly] private bool isInitialized = false;
+		[SerializeField, ValueDropdown("GetKeys")] private string _localizationKey = "";
+		[SerializeField, ReadOnly] private string _value = "";
+		[SerializeField, ReadOnly] private string _currentLocalizationKey = "";
+		[SerializeField, ReadOnly] private bool _isInitialized = false;
 
-		private string language = "";
+		private string _language = "";
 
 		public string Value
 		{
@@ -19,32 +19,32 @@ namespace ToolBox.Localization
 			{
 				string newLanguage = Localization.Language;
 
-				if (!isInitialized)
+				if (!_isInitialized)
 				{
-					language = newLanguage;
-					value = Localization.LocalizeText(localizationKey);
-					isInitialized = true;
+					_language = newLanguage;
+					_value = Localization.LocalizeText(_localizationKey);
+					_isInitialized = true;
 
-					return value;
+					return _value;
 				}
 
-				if (newLanguage != language)
+				if (newLanguage != _language)
 				{
-					value = Localization.LocalizeText(localizationKey);
-					language = newLanguage;
+					_value = Localization.LocalizeText(_localizationKey);
+					_language = newLanguage;
 
-					return value;
+					return _value;
 				}
 
-				return value;
+				return _value;
 			}
 			set
 			{
-				if (value == currentLocalizationKey)
+				if (value == _currentLocalizationKey)
 					return;
 
-				this.value = Localization.LocalizeText(value);
-				currentLocalizationKey = value;
+				this._value = Localization.LocalizeText(value);
+				_currentLocalizationKey = value;
 			}
 		}
 

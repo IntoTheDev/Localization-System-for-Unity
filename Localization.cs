@@ -8,14 +8,14 @@ namespace ToolBox.Localization
 {
 	public static class Localization
 	{
-		[FilePath] private static string fileName = "Localization.csv";
+		[FilePath] private static string _fileName = "Localization.csv";
 
-		[NonSerialized] private static Dictionary<string, Dictionary<string, string>> localization = new Dictionary<string, Dictionary<string, string>>();
+		[NonSerialized] private static Dictionary<string, Dictionary<string, string>> _localization = new Dictionary<string, Dictionary<string, string>>();
 		[NonSerialized] public static string Language = "RUS";
 
-		[NonSerialized] private static bool isEditorReady = false;
-		[NonSerialized] private static string[] keys = null;
-		[NonSerialized] private static string[] languages = null;
+		[NonSerialized] private static bool _isEditorReady = false;
+		[NonSerialized] private static string[] _keys = null;
+		[NonSerialized] private static string[] _languages = null;
 
 		public const string SAVE_KEY = "Language";
 
@@ -31,7 +31,7 @@ namespace ToolBox.Localization
 				return lines;
 			}
 
-			string filePath = Path.Combine(Application.streamingAssetsPath, fileName);
+			string filePath = Path.Combine(Application.streamingAssetsPath, _fileName);
 
 			using (StreamReader reader = new StreamReader(filePath))
 			{
@@ -64,14 +64,14 @@ namespace ToolBox.Localization
 					keyWords[i] = lists[0][i];
 
 				for (int i = 1; i < listsCount; i++)
-					localization.Add(languages[i], new Dictionary<string, string>());
+					_localization.Add(languages[i], new Dictionary<string, string>());
 
 				for (int i = 1; i < listsCount; i++)
 				{
 					int listSize = lists[i].Count;
 
 					for (int j = 0; j < listSize; j++)
-						localization[languages[i]].Add(keyWords[j], lists[i][j]);
+						_localization[languages[i]].Add(keyWords[j], lists[i][j]);
 				}
 
 				reader.Close();
@@ -87,7 +87,7 @@ namespace ToolBox.Localization
 
 		private static string Localize(string key)
 		{
-			if (localization[Language].TryGetValue(key, out string value))
+			if (_localization[Language].TryGetValue(key, out string value))
 				return value;
 			else
 				throw new KeyNotFoundException("Translation not found: " + key);
@@ -103,8 +103,8 @@ namespace ToolBox.Localization
 #if UNITY_EDITOR
 		public static string[] GetEditorData()
 		{
-			if (isEditorReady)
-				return keys;
+			if (_isEditorReady)
+				return _keys;
 
 			string[] GetLines(StreamReader reader)
 			{
@@ -113,7 +113,7 @@ namespace ToolBox.Localization
 				return lines;
 			}
 
-			string filePath = Path.Combine(Application.streamingAssetsPath, fileName);
+			string filePath = Path.Combine(Application.streamingAssetsPath, _fileName);
 
 			using (StreamReader reader = new StreamReader(filePath))
 			{
@@ -121,10 +121,10 @@ namespace ToolBox.Localization
 
 				int linesCount = lines.Length;
 
-				languages = new string[linesCount];
+				_languages = new string[linesCount];
 
 				for (int i = 1; i < linesCount; i++)
-					languages[i] = lines[i];
+					_languages[i] = lines[i];
 
 				List<string>[] lists = new List<string>[linesCount];
 				int listsCount = lists.Length;
@@ -140,20 +140,20 @@ namespace ToolBox.Localization
 						lists[i].Add(values[i]);
 				}
 
-				keys = new string[lists[0].Count];
-				int keysCount = keys.Length;
+				_keys = new string[lists[0].Count];
+				int keysCount = _keys.Length;
 
 				for (int i = 0; i < keysCount; i++)
-					keys[i] = lists[0][i];
+					_keys[i] = lists[0][i];
 
-				isEditorReady = true;
-				return keys;
+				_isEditorReady = true;
+				return _keys;
 			}
 		}
 
 		[Button(ButtonSizes.Medium)]
 		private static void Reload() =>
-			isEditorReady = false;
+			_isEditorReady = false;
 #endif
 	}
 }
