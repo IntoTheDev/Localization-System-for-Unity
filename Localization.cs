@@ -10,8 +10,24 @@ namespace ToolBox.Localization
 	{
 		[FilePath] private static string _fileName = "Localization.csv";
 
+		public static string Language 
+		{
+			get => _language;
+
+			set
+			{
+				if (_language == value)
+					return;
+
+				_language = value;
+				_currentDictionary = _localization[_language];
+				PlayerPrefs.SetString(SAVE_KEY, _language);
+			}
+		}
+
 		[NonSerialized] private static Dictionary<string, Dictionary<string, string>> _localization = new Dictionary<string, Dictionary<string, string>>();
-		[NonSerialized] public static string Language = "RUS";
+		[NonSerialized] private static Dictionary<string, string> _currentDictionary = null;
+		[NonSerialized] private static string _language = "ENG";
 
 		[NonSerialized] private static bool _isEditorReady = false;
 		[NonSerialized] private static string[] _keys = null;
@@ -22,7 +38,7 @@ namespace ToolBox.Localization
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
 		private static void LoadText()
 		{
-			Language = PlayerPrefs.GetString(SAVE_KEY, "RUS");
+			_language = PlayerPrefs.GetString(SAVE_KEY, "ENG");
 
 			string[] GetLines(StreamReader reader)
 			{
@@ -77,6 +93,8 @@ namespace ToolBox.Localization
 				reader.Close();
 				reader.Dispose();
 			}
+
+			_currentDictionary = _localization[_language];
 		}
 
 		public static string LocalizeText(string key) =>
@@ -87,7 +105,7 @@ namespace ToolBox.Localization
 
 		private static string Localize(string key)
 		{
-			if (_localization[Language].TryGetValue(key, out string value))
+			if (_currentDictionary.TryGetValue(key, out string value))
 				return value;
 			else
 				throw new KeyNotFoundException("Translation not found: " + key);

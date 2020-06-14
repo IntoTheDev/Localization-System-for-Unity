@@ -43,7 +43,7 @@ namespace ToolBox.Localization
 				if (value == _currentLocalizationKey)
 					return;
 
-				this._value = Localization.LocalizeText(value);
+				_value = Localization.LocalizeText(value);
 				_currentLocalizationKey = value;
 			}
 		}
